@@ -1,0 +1,88 @@
+***********************************************************************
+глава - Spring Boot
+
+*** Les_7_Spring_Data_REST ***
+
+
+Если у нас несколько Entity, то что получается для каждого Entity мы должны создавать
+интерфейс сервис, как EmployeeService? Потом имплементировать этот интерфейс, как EmployeeServiceImpl?
+Прописывать все необходимые методы, а так же мы должны для каждого Entity контроллер, как MyRestController?
+Создавать все необходимые методы в контроллере, прописывать для них разного типа Mapping-и. Нужно ли это
+делать? На самом деле НЕТ!!!
+
+Благодаря Spring Data Rest!
+
+Для этого мы создадим новый проект - spring_data_rest
+
+Для того чтобы мы могли обойтись без контроллеров и сервисов, мы должны добавить в pom файл
+от spring-boot-starter-data-rest -
+
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-data-rest</artifactId>
+</dependency>
+
+Spring Data Rest предоставляет механизм автоматического создания REST API на основе типа Entity,
+прописанного в репозитории проекта.
+
+В нашем приложении REST API создается на основе типа Entity, прописанного в репозитории проекта.
+Это означает что Spring будет сканировать репозиторий, а наш репозиторий называется -
+- EmployeeRepository посмотрит на его первый дженерик - а это наш Entity тип. И на основе этого
+Entity type создаст все необходимые REST API. Создание происходит путем изменения имени нашего
+Entity типа, например в Employee заменяется первая буква на прописную и добавляется
+в конце множественное число - s, таким образом Employee превращается в - employees.
+Таким образом нам не нужен контроллер в котором мы прописываем все наши Mapping-и
+так как Spring использует best practice API (смотреть слайд №2).
+Такие API создаются by default если мы используем Spring Data Rest и не прописываем
+своего контроллера с его Mapping-ами.
+
+Смотреть слайды.
+
+
+***********************************************************************
+глава - Spring Boot
+
+*** Les_8_Знакомство со Spring Boot Actuator ***
+
+
+Для того чтобы следить за работоспособностью нашего Spring Boot приложения, существует
+Spring Boot Actuator.
+Благодаря ему нам не нужно писать дополнительный код.
+
+Spring Boot Actuator предоставляет готовые конечные точки (endpoints), с помощью которых
+мониторится приложение.
+(endpoints - это обычные URL адреса).
+
+Всё что нам нужно сделать, это добавить в pom файл следующую зависимость:
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+Так же для возможности отображать нужную нам информацию посредствам выбранных endpoints
+в браузере, в файле application.properties мы можем прописать следующее:
+
+#для выборочных endpoints через запятую.
+management.endpoints.web.exposure.include=info,beans,mappings
+
+или
+
+#для всех endpoints
+#management.endpoints.web.exposure.include=*
+
+Для того что бы мониторить наше приложение и просматривать endpoints мог не каждый человек,
+а только разработчики т.е. люди с правом доступа, необходимо мы можем добавить в проект зависимость
+от security:
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+При этом Spring Boot сам сгенерирует пароль типа - 5a2d8f62-b599-4327-98d0-920b88cf4f5d
+и отобразит его в консоли IntellIJ
+Стандартный user name это - "user", ну и далее вводим пароль.
+
+Если мы хотим прописать свои user name и password это можно сделать в файле application.properties
+
+***********************************************************************
